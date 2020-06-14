@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import AVFoundation
+
 
 class ViewController: UIViewController {
     
@@ -20,13 +22,16 @@ class ViewController: UIViewController {
     //    let mid = 7
     //    let soft = 5
     
+    var player: AVAudioPlayer!
+    
+    
     let eggTimer = ["soft" : 10, "mid" : 3, "hard" : 4]
     
     var totalTime = 1
     var progressedTime = 0
     
     var timer = Timer()
-//    var text : String = ""
+    //    var text : String = ""
     
     @IBOutlet weak var mainText: UILabel!
     
@@ -37,13 +42,15 @@ class ViewController: UIViewController {
         timer.invalidate()
         progressBar.progress = 0.0
         progressedTime = 0
-        mainText.text = "How else?"
         
         let name = sender.currentTitle!
+        mainText.text = name
         
         totalTime = eggTimer[name]!
         
         timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(update), userInfo: nil, repeats: true)
+        
+        
         
     }
     
@@ -54,15 +61,25 @@ class ViewController: UIViewController {
             
             var percentage: Float = Float(progressedTime) / Float(totalTime)
             progressBar.progress = percentage
-    
+            
             
         }
         else {
             timer.invalidate()
             mainText.text = "done"
+            playSound()
+            
         }
     }
+    func playSound() {
+        let url = Bundle.main.url(forResource: "alarm_sound", withExtension: "mp3")
+        player = try! AVAudioPlayer(contentsOf: url!)
+        player.play()
+        
+    }
+    
 }
+
 
 
 
